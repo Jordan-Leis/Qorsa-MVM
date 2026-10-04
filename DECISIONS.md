@@ -16,7 +16,7 @@ Each entry: the choice, the alternatives, and the reason. Status is **Accepted**
 - **Alternatives:** numpy arrays; wrapping pq-crystals C.
 - **Reason:** Python integers never overflow, so the model can't silently wrap. Following the FIPS text avoids the Montgomery/signed representation used in pq-crystals (common error 1). numpy is not needed for 256-coefficient polynomials.
 
-## D3. Verilator harness in C++ (Proposed)
+## D3. Verilator harness in C++ (Accepted, 2026-10-04)
 
 - **Choice:** one C++ harness per test, reading hex vectors produced by the Python generator, with a valid bit carried through the pipeline and comparison only on valid out.
 - **Alternatives:** SystemVerilog testbench with `$readmemh` and classes.
@@ -37,7 +37,10 @@ Each entry: the choice, the alternatives, and the reason. Status is **Accepted**
 
 ## D6. Lane mapping and gamma hoisting (Proposed, from the brief; Jordan to confirm)
 
-- **Choice:** lane i owns coefficient pair i. ML-KEM: base-case pair i with constant gamma_i. ML-DSA: coefficients 2i and 2i+1. One pipelined agile multiplier per lane, two modular-add accumulators. Gamma multiply hoisted to once per row.
+- **Choice:** lane i owns coefficient pair i. ML-KEM: base-case pair i with constant gamma_i. ML-DSA: coefficients 2i and 2i+1. One pipelined agile multiplier per lane. Gamma multiply hoisted to once per row.
+- **Correction to the brief:** hoisting needs **three** modular-add accumulators in ML-KEM mode, not two: acc00 = sum(a0 b0), acc11 = sum(a1 b1), acc1 = sum(a0 b1 + a1 b0). At row end c0 = acc00 + gamma_i * acc11, c1 = acc1. ML-DSA mode uses acc00 and acc1 for the even and odd points.
+- **Slot order per ML-KEM term:** a0 b0 -> acc00, a1 b1 -> acc11, a0 b1 -> acc1, a1 b0 -> acc1.
+- **Open (Jordan): gamma hazard.** The gamma multiply needs the final acc11, which is ready only after the last a1 b1 leaves the multiplier pipeline (latency L). Options: (a) stall about L cycles per row; (b) ping-pong acc11 and issue row r's gamma multiply during row r+1 (hides L if L <= 12); (c) a dedicated gamma multiplier per lane. Suggested: (a) first for a correct baseline, then (b) if time allows, reporting cycles for both.
 - **Alternatives:** fully parallel base-case lane (4 to 5 multipliers per lane); Karatsuba for c1.
 - **Reason:** to be written by Jordan.
 
@@ -47,6 +50,29 @@ Each entry: the choice, the alternatives, and the reason. Status is **Accepted**
 - **Alternatives:** a global mode register written between transactions.
 - **Reason:** with a global register, operations already in flight would be reduced with the wrong constants at a mode switch (common error 8). The mode-switch test (d) checks this.
 
-## D8. Matrix and vector conventions (Open)
+## D8. Memories and transactions (Accepted in outline, 2026-10-04)
 
-To be agreed before RTL: row/column order of A, vector file word width and order, per-lane memory addressing.
+- **Choice:** each lane has two memories (P6 `mem.sv`, reused as is): an A memory and an S memory. A word is one coefficient pair, two 23-bit fields (46 bits); ML-KEM values are zero-extended. Lane i's A memory holds pair i of A[r][j] at address r*COLS + j (A[r][j] is row r, column j, as in FIPS); its S memory holds pair i of s[j] at address j. Memories are loaded through a write port driven by the harness.
+- **Transactions** carry {mode, rows, cols}. rows = 1 gives the dot products t^T r and s^T u.
+- **Alternatives:** one memory per lane with two read ports; `$readmemh` preload.
+- **Reason:** both operands are lane-local, so nothing is broadcast (unlike P6). A write port is how a real host would load it and lets the mode-switch test stream transactions.
+- **Open:** exact bit order inside a word and output format; settle when writing the vector generator.
+
+## D9. The engine is a general NTT-domain matrix-vector unit, not a protocol (Accepted, 2026-10-04)
+
+- **Choice:** the engine computes A∘s for whatever is loaded. It does not know whether S holds s, r or y. Noise terms (e, e1, e2) are added, never multiplied, and for u and v only after an inverse NTT, so they are outside the engine.
+- **Stretch:** a `transpose` bit in the transaction (read A by column) would cover Encaps' A^T∘r. Address generation only; no datapath change.
+- **Reason:** keeps the hardware to the one operation that dominates all of KeyGen, Encaps and Sign.
+
+## D10. What is reused from P6 (Accepted, 2026-10-04)
+
+- `mem.sv`: as is.
+- `ctrl.sv`: structure (IDLE/COMPUTE, word and row counters, first/last), extended with a slot counter and the mode tag.
+- `accum.sv`: first/last pattern; the add becomes a modular add with a destination select.
+- `mvm.sv`: control and address register trees with `dont_touch` replicas. The vector broadcast tree is dropped.
+- `dot8.sv`: not reused (8 parallel 8-bit multiplies vs one modular multiply); its input/M/P register pattern carries over.
+
+## D11. modmul_agile interface (Accepted, 2026-10-04)
+
+- **Choice:** one op per cycle, no backpressure; `in_mode` picks q; `in_tag` and `in_mode` travel with the data and come out with the result; `out_valid` marks results. Contract is in the header of `rtl/modmul_agile.sv`.
+- **Reason:** the lane needs to know, when a product emerges, which accumulator it belongs to and whether it is first or last. Carrying that in the multiplier pipeline keeps it aligned by construction (common errors 8 and 10).

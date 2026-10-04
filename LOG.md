@@ -28,3 +28,13 @@ Commands run, tool versions, results. Newest at the bottom.
   - gamma = 17^i instead of 17^(2*BitRev7(i)+1): 3 failures, all ML-KEM (gamma table, product, matvec). ML-DSA tests still pass.
   - cyclic instead of negacyclic schoolbook: 4 failures (product and matvec, both schemes).
 - Not yet done: optional cross-check against pq-crystals reference C.
+
+## 2026-10-04 (Sun): tools, harness
+
+- Thank-you email sent (Jordan). Golden model reviewed by Jordan.
+- Installed by Jordan: Verilator 5.020 (Debian 5.020-1), OpenSCAD 2021.01, python3-venv, python3-pip. g++ 13.3.0, GNU Make 4.3.
+- `tb/smoke/run.sh`: **pass**, prints "hello from verilator". `logs/s0_verilator_smoke.log`.
+- Vivado on eceubuntu: assumed available (Jordan, 2026-10-04); smoke test still to be run before M4.
+- modmul harness (`tb/modmul/`), self-tested against a behavioral `%` stand-in (`selftest/modmul_ref.sv`, latency 5):
+  - `make all DUT=modmul_ref`: kem_exhaustive 11,082,241 checked, 0 mismatches (0.79 s); dsa_random 1,000,256 checked, 0 mismatches; mixed 1,000,000 checked, 0 mismatches. `logs/harness_selftest_*.log`.
+  - `make kem DUT=modmul_ref PARAMS="-GBUG=1"`: **fails as intended**, 1 mismatch reported at a=3328 b=3328, make exits nonzero. `logs/harness_selftest_BUG1_kem_exhaustive.log`.

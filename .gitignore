@@ -8,6 +8,7 @@ __pycache__/
 
 # Verilator
 obj_dir/
+obj_*/
 build/
 *.vcd
 *.fst

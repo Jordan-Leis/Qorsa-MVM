@@ -1,0 +1,7 @@
+Verilator 5.020 2024-01-01 rev (Debian 5.020-1)
+DUT=modmul_ref PARAMS=
+PASS mixed: 1000000 ops in, 1000000 results checked, 0 mismatches, 1125631 cycles, latency 5
+
+real	0m0.112s
+user	0m0.111s
+sys	0m0.000s

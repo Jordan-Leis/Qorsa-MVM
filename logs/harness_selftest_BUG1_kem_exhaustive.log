@@ -1,0 +1,8 @@
+Verilator 5.020 2024-01-01 rev (Debian 5.020-1)
+DUT=modmul_ref PARAMS=-GBUG=1
+  MISMATCH: cycle 11082249: mode=0 a=3328 b=3328 expected p=1 got p=0 (out_mode=0 out_tag=9 want tag=9, latency 5 vs 5)
+FAIL kem_exhaustive: 11082241 ops in, 11082241 results checked, 1 mismatches, 11082265 cycles, latency 5
+
+real	0m0.887s
+user	0m0.859s
+sys	0m0.012s

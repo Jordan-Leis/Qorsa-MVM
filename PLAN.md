@@ -6,8 +6,8 @@ Ownership: Jordan writes, or reviews line by line, the modular multiplier, the l
 
 ## S0: setup (Sat night)
 
-- [ ] Verilator 5 installed, hello-world builds
-- [ ] Python venv
+- [x] Verilator 5 installed, hello-world builds
+- [x] Python venv (not needed so far: the model uses only the standard library)
 - [x] Repo skeleton, `DECISIONS.md`, `LOG.md`, `LEARNING.md`
 - [x] First commit pushed
 - [ ] Vivado smoke test on eceubuntu: version prints, `get_parts xck26*` finds the K26 part
@@ -22,11 +22,11 @@ Ownership: Jordan writes, or reviews line by line, the modular multiplier, the l
   - [ ] scale factors and zeta tables compared against the FIPS 203/204 PDF text and appendices
   - [x] 17^128 ≡ -1 (mod 3329), 1753^256 ≡ -1 (mod 8380417)
   - [x] gamma table unit test
-- [ ] Vector file layout agreed in `DECISIONS.md` before any RTL
+- [x] Memory layout agreed in `DECISIONS.md` (D8); exact word bit order still open
 - [ ] Vector generator: per-lane operand memories and expected outputs, several seeds, alternating-mode stream
 - [ ] Jordan: `LEARNING.md` primer items 1 to 6, hand calculations, DSP-per-lane predictions
 - [ ] Jordan: first draft of `modmul_agile.sv`
-- [ ] Verilator C++ harness plus tests (a) and (b) ready for the multiplier
+- [x] Verilator C++ harness plus tests (a) and (b) ready for the multiplier (self-tested, `tb/modmul/`)
 - [ ] Chip generator and `/qorsa` redirect page drafted; small test tile printed
 
 ## M2+M3: RTL and verification (Mon)
