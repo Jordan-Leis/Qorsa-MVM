@@ -8,19 +8,20 @@ Ownership: Jordan writes, or reviews line by line, the modular multiplier, the l
 
 - [ ] Verilator 5 installed, hello-world builds
 - [ ] Python venv
-- [ ] Repo skeleton, `DECISIONS.md`, `LOG.md`, `LEARNING.md`
-- [ ] First commit pushed
+- [x] Repo skeleton, `DECISIONS.md`, `LOG.md`, `LEARNING.md`
+- [x] First commit pushed
 - [ ] Vivado smoke test on eceubuntu: version prints, `get_parts xck26*` finds the K26 part
 
 ## M1: golden model (Sun)
 
-- [ ] Plain Python, no crypto libraries, following FIPS 203/204 pseudocode
-- [ ] zeta tables, NTT, inverse NTT, BaseCaseMultiply, MultiplyNTTs, pointwise multiply, A∘s for both schemes
+- [x] Plain Python, no crypto libraries, following FIPS 203/204 pseudocode
+- [x] zeta tables, NTT, inverse NTT, BaseCaseMultiply, MultiplyNTTs, pointwise multiply, A∘s for both schemes
 - [ ] Validation, independent of the model itself:
-  - [ ] NTT-domain product equals schoolbook negacyclic product, both schemes, random inputs
-  - [ ] inverse NTT(NTT(f)) == f; scale factors 3303 and 8347681 checked against the FIPS text
-  - [ ] 17^128 ≡ -1 (mod 3329), 1753^256 ≡ -1 (mod 8380417)
-  - [ ] gamma table unit test
+  - [x] NTT-domain product equals schoolbook negacyclic product, both schemes, random inputs
+  - [x] inverse NTT(NTT(f)) == f; scale factors 3303 and 8347681 equal 128^-1 and 256^-1
+  - [ ] scale factors and zeta tables compared against the FIPS 203/204 PDF text and appendices
+  - [x] 17^128 ≡ -1 (mod 3329), 1753^256 ≡ -1 (mod 8380417)
+  - [x] gamma table unit test
 - [ ] Vector file layout agreed in `DECISIONS.md` before any RTL
 - [ ] Vector generator: per-lane operand memories and expected outputs, several seeds, alternating-mode stream
 - [ ] Jordan: `LEARNING.md` primer items 1 to 6, hand calculations, DSP-per-lane predictions

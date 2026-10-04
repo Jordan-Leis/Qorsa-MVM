@@ -1,0 +1,17 @@
+test_hoisted_equals_direct (test_model.GammaHoisting.test_hoisted_equals_direct) ... ok
+test_mldsa65 (test_model.MatvecMatchesSchoolbook.test_mldsa65) ... ok
+test_mlkem768 (test_model.MatvecMatchesSchoolbook.test_mlkem768) ... ok
+test_mldsa (test_model.ProductMatchesSchoolbook.test_mldsa) ... ok
+test_mlkem (test_model.ProductMatchesSchoolbook.test_mlkem) ... ok
+test_inverse_scale_factors (test_model.RootsAndConstants.test_inverse_scale_factors) ... ok
+test_mldsa_zeta_is_primitive_512th_root (test_model.RootsAndConstants.test_mldsa_zeta_is_primitive_512th_root) ... ok
+test_mlkem_gamma_table (test_model.RootsAndConstants.test_mlkem_gamma_table) ... ok
+test_mlkem_has_no_512th_root (test_model.RootsAndConstants.test_mlkem_has_no_512th_root) ... ok
+test_mlkem_zeta_is_primitive_256th_root (test_model.RootsAndConstants.test_mlkem_zeta_is_primitive_256th_root) ... ok
+test_mldsa (test_model.TransformRoundTrip.test_mldsa) ... ok
+test_mlkem (test_model.TransformRoundTrip.test_mlkem) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.716s
+
+OK
