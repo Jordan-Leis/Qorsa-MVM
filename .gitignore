@@ -1,0 +1,28 @@
+# Private planning brief (personal and delivery details). Never publish.
+Project-Start/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Verilator
+obj_dir/
+build/
+*.vcd
+*.fst
+
+# Vivado run directories and journals (curated reports go in logs/)
+.Xil/
+vivado/runs/
+vivado*.jou
+vivado*.log
+vivado*.str
+*.dcp
+
+# Generated print output (sources in print/ are tracked)
+print/out/
+
+# Editors
+.vscode/
+*.swp
